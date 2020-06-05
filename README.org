@@ -1,0 +1,48 @@
+#+TITLE: Libvirt: import an OVA whonix image
+#+OPTIONS: ^:nil
+#+PROPERTY: header-args:sh :session *shell libvirt-import-ova-image sh* :results silent raw
+#+PROPERTY: header-args:python :session *shell libvirt-import-ova-image python* :results silent raw
+
+** System environment
+
+- Debian 9.11
+
+- Libvirt 3.0.0
+
+** List the available formats
+
+#+BEGIN_SRC sh :results replace code :exports both
+qemu-img -h | tail -n1
+#+END_SRC
+
+#+RESULTS:
+#+begin_src sh
+Supported formats: blkdebug blkreplay blkverify bochs cloop dmg file ftp ftps gluster host_cdrom host_device http https iscsi iser luks nbd nfs null-aio null-co parallels qcow qcow2 qed quorum raw rbd replication sheepdog ssh vdi vhdx vmdk vpc vvfat
+#+end_src
+
+** Unarchive an OVA file
+
+#+BEGIN_SRC sh
+tar xvf Whonix-CLI-15.0.0.9.4.ova
+#+END_SRC
+
+** Convert vmdk image to the qcow2 image
+
+#+BEGIN_SRC sh
+qemu-img convert -O qcow2 Whonix-CLI-15.0.0.9.4-disk001.vmdk Whonix-CLI-15.0.0.9.4-disk001.qcow2
+#+END_SRC
+
+#+BEGIN_SRC sh
+qemu-img convert -O qcow2 Whonix-CLI-15.0.0.9.4-disk002.vmdk Whonix-CLI-15.0.0.9.4-disk002.qcow2
+#+END_SRC
+
+** Create VMs
+
+Just create a VM and attach disk.
+
+VM with a disk 001 is a whonix gateway, VM with a disk 002 is a whonix
+client.
+
+** References
+
+- https://wiki.hackzine.org/sysadmin/kvm-import-ova.html
